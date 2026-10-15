@@ -18,7 +18,11 @@
     'category': 'Education',
     'license': 'LGPL-3',
     'depends': ['base'],
-    'data': [],
+    'data': [
+    'security/ir.model.access.csv',
+    'data/student_sequence.xml',
+    'views/student_views.xml',
+],
     'installable': True,
     'application': True,
 }

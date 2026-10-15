@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- Student List View -->
+    <record id="view_school_student_tree" model="ir.ui.view">
+        <field name="name">school.student.tree</field>
+        <field name="model">school.student</field>
+        <field name="arch" type="xml">
+            <tree string="Students">
+                <field name="student_number"/>
+                <field name="name"/>
+                <field name="date_of_birth"/>
+                <field name="age"/>
+                <field name="gender"/>
+                <field name="phone"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Student Form View -->
+    <record id="view_school_student_form" model="ir.ui.view">
+        <field name="name">school.student.form</field>
+        <field name="model">school.student</field>
+        <field name="arch" type="xml">
+            <form string="Student">
+
+                <!-- Workflow Buttons -->
+                <header>
+                    <button
+                        name="action_activate"
+                        string="Activate"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'draft')]}"
+                    />
+
+                    <button
+                        name="action_graduate"
+                        string="Graduate"
+                        type="object"
+                        class="oe_highlight"
+                        attrs="{'invisible': [('state', '!=', 'active')]}"
+                    />
+
+                    <button
+                        name="action_cancel"
+                        string="Cancel Enrollment"
+                        type="object"
+                        attrs="{'invisible': [('state', 'not in', ['draft', 'active'])]}"
+                    />
+
+                    <field
+                        name="state"
+                        widget="statusbar"
+                        statusbar_visible="draft,active,graduated,cancelled"
+                        readonly="1"
+                    />
+                </header>
+
+                <sheet>
+
+                    <!-- Student Name -->
+                    <div class="oe_title">
+                        <h1>
+                            <field
+                                name="name"
+                                placeholder="Student Name"
+                            />
+                        </h1>
+                    </div>
+
+                    <!-- Student Details -->
+                    <group>
+                        <group string="Personal Information">
+                            <field
+                                name="student_number"
+                                readonly="1"
+                            />
+                            <field name="date_of_birth"/>
+                            <field name="age" readonly="1"/>
+                            <field name="gender"/>
+                        </group>
+
+                        <group string="Contact Information">
+                            <field name="email"/>
+                            <field name="phone"/>
+                        </group>
+                    </group>
+
+                    <!-- Record Information -->
+                    <group>
+                        <field name="active"/>
+                    </group>
+
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Student Action -->
+    <record id="action_school_student" model="ir.actions.act_window">
+        <field name="name">Students</field>
+        <field name="res_model">school.student</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Main Menu -->
+    <menuitem
+        id="menu_school_root"
+        name="School Management"
+        sequence="10"
+    />
+
+    <!-- Students Menu -->
+    <menuitem
+        id="menu_school_students"
+        name="Students"
+        parent="menu_school_root"
+        action="action_school_student"
+        sequence="10"
+    />
+
+</odoo>
