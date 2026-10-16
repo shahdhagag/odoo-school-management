@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Classroom List View -->
+    <record id="view_school_classroom_tree" model="ir.ui.view">
+        <field name="name">school.classroom.tree</field>
+        <field name="model">school.classroom</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="code"/>
+                <field name="grade_level"/>
+                <field name="academic_year_id"/>
+                <field name="capacity"/>
+                <field name="student_count"/>
+                <field name="available_seats"/>
+                <field name="active" widget="boolean_toggle"/>
+                <field name="teacher_id"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Classroom Form View -->
+    <record id="view_school_classroom_form" model="ir.ui.view">
+        <field name="name">school.classroom.form</field>
+        <field name="model">school.classroom</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="e.g. Class 1A"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="code"/>
+                            <field name="grade_level"/>
+                            <field name="teacher_id"/>
+                            <field name="academic_year_id"/>
+                        </group>
+                        <group>
+                            <field name="capacity"/>
+                            <field name="student_count" readonly="1"/>
+                            <field name="available_seats" readonly="1"/>
+                            <field name="active"/>
+                        </group>
+                    </group>
+
+                                        <notebook>
+                        <!-- Students Tab -->
+                        <page string="Students">
+                            <field name="student_ids">
+                                <tree>
+                                    <field name="student_number"/>
+                                    <field name="name"/>
+                                    <field name="gender"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                        <!-- Attendance Statistics Tab -->
+                        <page string="Attendance Statistics">
+                            <group>
+                                <group string="Attendance Summary">
+                                    <field name="total_attendance_records"
+                                           readonly="1"/>
+                                    <field name="attendance_rate"
+                                           widget="percentage"
+                                           readonly="1"/>
+                                </group>
+
+                                <group string="Attendance Details">
+                                    <field name="present_days"
+                                           readonly="1"/>
+                                    <field name="late_days"
+                                           readonly="1"/>
+                                    <field name="absent_days"
+                                           readonly="1"/>
+                                    <field name="excused_days"
+                                           readonly="1"/>
+                                </group>
+                            </group>
+
+                            <separator string="Attendance Records"/>
+
+                            <field name="attendance_ids" readonly="1">
+                                <tree>
+                                    <field name="attendance_date"/>
+                                    <field name="student_id"/>
+                                    <field name="status"/>
+                                    <field name="notes"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Classroom Action -->
+    <record id="action_school_classroom" model="ir.actions.act_window">
+        <field name="name">Classrooms</field>
+        <field name="res_model">school.classroom</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Classroom Menu -->
+    <menuitem
+        id="menu_school_classroom"
+        name="Classrooms"
+        parent="menu_school_root"
+        action="action_school_classroom"
+        sequence="20"
+    />
+</odoo>

@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Academic Year Tree View -->
+    <record id="view_school_academic_year_tree" model="ir.ui.view">
+        <field name="name">school.academic.year.tree</field>
+        <field name="model">school.academic.year</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Academic Year Form View -->
+    <record id="view_school_academic_year_form" model="ir.ui.view">
+        <field name="name">school.academic.year.form</field>
+        <field name="model">school.academic.year</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_activate"
+                            string="Activate"
+                            type="object"
+                            class="oe_highlight"
+                            attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+
+                    <button name="action_close"
+                            string="Close Year"
+                            type="object"
+                            attrs="{'invisible': [('state', '!=', 'active')]}"/>
+
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,active,closed"/>
+                </header>
+
+                <sheet>
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="2026/2027"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="start_date"/>
+                            <field name="end_date"/>
+                        </group>
+                    </group>
+
+                    <notebook>
+                        <page string="Semesters">
+                            <field name="term_ids">
+                                <tree editable="bottom">
+                                    <field name="name"/>
+                                    <field name="start_date"/>
+                                    <field name="end_date"/>
+                                    <field name="state"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Academic Year Search View -->
+    <record id="view_school_academic_year_search" model="ir.ui.view">
+        <field name="name">school.academic.year.search</field>
+        <field name="model">school.academic.year</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <filter name="draft"
+                        string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="active"
+                        string="Active"
+                        domain="[('state', '=', 'active')]"/>
+                <filter name="closed"
+                        string="Closed"
+                        domain="[('state', '=', 'closed')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_state"
+                            string="Status"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Academic Year Action -->
+    <record id="action_school_academic_year" model="ir.actions.act_window">
+        <field name="name">Academic Years</field>
+        <field name="res_model">school.academic.year</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_school_academic_year_search"/>
+    </record>
+
+    <!-- Semester Tree View -->
+    <record id="view_school_academic_term_tree" model="ir.ui.view">
+        <field name="name">school.academic.term.tree</field>
+        <field name="model">school.academic.term</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="academic_year_id"/>
+                <field name="start_date"/>
+                <field name="end_date"/>
+                <field name="state"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Semester Form View -->
+    <record id="view_school_academic_term_form" model="ir.ui.view">
+        <field name="name">school.academic.term.form</field>
+        <field name="model">school.academic.term</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state"
+                           widget="statusbar"
+                           statusbar_visible="draft,active,closed"/>
+                </header>
+
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="academic_year_id"/>
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                        <field name="state"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Semester Search View -->
+    <record id="view_school_academic_term_search" model="ir.ui.view">
+        <field name="name">school.academic.term.search</field>
+        <field name="model">school.academic.term</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="academic_year_id"/>
+                <filter name="draft"
+                        string="Draft"
+                        domain="[('state', '=', 'draft')]"/>
+                <filter name="active"
+                        string="Active"
+                        domain="[('state', '=', 'active')]"/>
+                <filter name="closed"
+                        string="Closed"
+                        domain="[('state', '=', 'closed')]"/>
+                <group expand="0" string="Group By">
+                    <filter name="group_by_academic_year"
+                            string="Academic Year"
+                            context="{'group_by': 'academic_year_id'}"/>
+                    <filter name="group_by_state"
+                            string="Status"
+                            context="{'group_by': 'state'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Semester Action -->
+    <record id="action_school_academic_term" model="ir.actions.act_window">
+        <field name="name">Semesters</field>
+        <field name="res_model">school.academic.term</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id" ref="view_school_academic_term_search"/>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_school_academic_year"
+              name="Academic Years"
+              parent="school_management.menu_school_root"
+              action="action_school_academic_year"
+              sequence="60"/>
+
+    <menuitem id="menu_school_academic_term"
+              name="Semesters"
+              parent="school_management.menu_school_root"
+              action="action_school_academic_term"
+              sequence="61"/>
+
+</odoo>

@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- ===================================== -->
+    <!-- Teacher List View                     -->
+    <!-- ===================================== -->
+
+    <record id="view_school_teacher_tree" model="ir.ui.view">
+        <field name="name">school.teacher.tree</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="teacher_number"/>
+                <field name="name"/>
+                <field name="gender"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="hire_date"/>
+                <field name="active"/>
+            </tree>
+        </field>
+    </record>
+
+
+    <!-- ===================================== -->
+    <!-- Teacher Form View                     -->
+    <!-- ===================================== -->
+
+    <record id="view_school_teacher_form" model="ir.ui.view">
+        <field name="name">school.teacher.form</field>
+        <field name="model">school.teacher</field>
+        <field name="arch" type="xml">
+
+            <form>
+                <sheet>
+
+                    <!-- Teacher Name -->
+                    <div class="oe_title">
+                        <label for="name"/>
+                        <h1>
+                            <field name="name" placeholder="Teacher Name"/>
+                        </h1>
+                    </div>
+
+                    <!-- Basic Information -->
+                    <group string="Teacher Information">
+
+                        <group>
+                            <field name="teacher_number" readonly="1"/>
+                            <field name="gender"/>
+                            <field name="hire_date"/>
+                        </group>
+
+                        <group>
+                            <field name="email"/>
+                            <field name="phone"/>
+                            <field name="active"/>
+                        </group>
+
+                    </group>
+
+                    <!-- Subjects and Classrooms -->
+                    <notebook>
+
+                        <!-- Subjects Tab -->
+                        <page string="Subjects">
+                            <field name="subject_ids"
+                                   widget="many2many_tags"
+                                   placeholder="Select subjects"/>
+                        </page>
+
+                        <!-- Classrooms Tab -->
+                        <page string="Classrooms">
+                            <field name="classroom_ids">
+                                <tree>
+                                    <field name="name"/>
+                                    <field name="code"/>
+                                    <field name="grade_level"/>
+                                    <field name="academic_year_id"/>
+                                    <field name="capacity"/>
+                                    <field name="student_count"/>
+                                </tree>
+                            </field>
+                        </page>
+
+                    </notebook>
+
+                </sheet>
+            </form>
+
+        </field>
+    </record>
+
+
+    <!-- ===================================== -->
+    <!-- Teacher Action                        -->
+    <!-- ===================================== -->
+
+    <record id="action_school_teacher" model="ir.actions.act_window">
+        <field name="name">Teachers</field>
+        <field name="res_model">school.teacher</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+
+    <!-- ===================================== -->
+    <!-- Teacher Menu                          -->
+    <!-- ===================================== -->
+
+    <menuitem
+        id="menu_school_teacher"
+        name="Teachers"
+        parent="menu_school_root"
+        action="action_school_teacher"
+        sequence="20"
+    />
+
+</odoo>

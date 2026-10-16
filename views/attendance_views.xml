@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Attendance List View -->
+    <record id="view_school_attendance_tree" model="ir.ui.view">
+        <field name="name">school.attendance.tree</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <tree string="Attendance">
+                <field name="attendance_date"/>
+                <field name="student_id"/>
+                <field name="classroom_id"/>
+                <field name="status"
+                       decoration-success="status == 'present'"
+                       decoration-danger="status == 'absent'"
+                       decoration-warning="status == 'late'"/>
+            </tree>
+        </field>
+    </record>
+
+    <!-- Attendance Form View -->
+    <record id="view_school_attendance_form" model="ir.ui.view">
+        <field name="name">school.attendance.form</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <form string="Attendance">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="student_id"/>
+                            <field name="classroom_id"/>
+                        </group>
+                        <group>
+                            <field name="attendance_date"/>
+                            <field name="status"/>
+                        </group>
+                    </group>
+
+                    <group>
+                        <field name="notes"
+                               placeholder="Add attendance notes..."/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Search View -->
+    <record id="view_school_attendance_search" model="ir.ui.view">
+        <field name="name">school.attendance.search</field>
+        <field name="model">school.attendance</field>
+        <field name="arch" type="xml">
+            <search string="Search Attendance">
+                <field name="student_id"/>
+                <field name="classroom_id"/>
+                <field name="attendance_date"/>
+                <field name="status"/>
+
+                <filter name="filter_present"
+                        string="Present"
+                        domain="[('status', '=', 'present')]"/>
+
+                <filter name="filter_absent"
+                        string="Absent"
+                        domain="[('status', '=', 'absent')]"/>
+
+                <filter name="filter_late"
+                        string="Late"
+                        domain="[('status', '=', 'late')]"/>
+
+                <filter name="filter_excused"
+                        string="Excused"
+                        domain="[('status', '=', 'excused')]"/>
+
+                <group expand="0" string="Group By">
+                    <filter name="group_student"
+                            string="Student"
+                            context="{'group_by': 'student_id'}"/>
+
+                    <filter name="group_classroom"
+                            string="Classroom"
+                            context="{'group_by': 'classroom_id'}"/>
+
+                    <filter name="group_date"
+                            string="Date"
+                            context="{'group_by': 'attendance_date'}"/>
+
+                    <filter name="group_status"
+                            string="Status"
+                            context="{'group_by': 'status'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <!-- Attendance Action -->
+    <record id="action_school_attendance" model="ir.actions.act_window">
+        <field name="name">Attendance</field>
+        <field name="res_model">school.attendance</field>
+        <field name="view_mode">tree,form</field>
+        <field name="search_view_id"
+               ref="view_school_attendance_search"/>
+    </record>
+
+    <!-- Attendance Menu -->
+    <menuitem
+        id="menu_school_attendance"
+        name="Attendance"
+        parent="menu_school_root"
+        action="action_school_attendance"
+        sequence="50"
+    />
+
+</odoo>

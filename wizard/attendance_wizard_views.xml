@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Bulk Attendance Wizard Form -->
+    <record id="view_school_attendance_wizard_form" model="ir.ui.view">
+        <field name="name">school.attendance.wizard.form</field>
+        <field name="model">school.attendance.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Register Classroom Attendance">
+
+                <!-- Classroom and Attendance Date -->
+                <group>
+                    <field name="classroom_id"/>
+                    <field name="attendance_date"/>
+                </group>
+
+                <!-- Students Attendance Table -->
+                <group string="Students">
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="bottom"
+                              create="false"
+                              delete="false">
+                            <field name="student_id"
+                                   readonly="1"
+                                   force_save="1"/>
+                            <field name="status"/>
+                            <field name="already_recorded"
+                                   readonly="1"/>
+                        </tree>
+                    </field>
+                </group>
+
+                <!-- Wizard Buttons -->
+                <footer>
+                    <button
+                        name="action_confirm_attendance"
+                        string="Confirm Attendance"
+                        type="object"
+                        class="oe_highlight"
+                    />
+
+                    <button
+                        string="Cancel"
+                        special="cancel"
+                    />
+                </footer>
+
+            </form>
+        </field>
+    </record>
+
+
+    <!-- Open Attendance Wizard -->
+    <record id="action_school_attendance_wizard"
+            model="ir.actions.act_window">
+
+        <field name="name">Register Classroom Attendance</field>
+        <field name="res_model">school.attendance.wizard</field>
+        <field name="view_mode">form</field>
+
+        <field name="view_id"
+               ref="view_school_attendance_wizard_form"/>
+
+        <field name="target">new</field>
+
+    </record>
+
+
+    <!-- Attendance Wizard Menu -->
+    <menuitem
+        id="menu_school_bulk_attendance"
+        name="Register Classroom Attendance"
+        parent="menu_school_root"
+        action="action_school_attendance_wizard"
+        sequence="51"
+    />
+
+</odoo>

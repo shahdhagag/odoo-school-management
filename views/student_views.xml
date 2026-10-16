@@ -12,6 +12,8 @@
                 <field name="date_of_birth"/>
                 <field name="age"/>
                 <field name="gender"/>
+                <field name="classroom_id"
+                       domain="[('active', '=', True)]"/>
                 <field name="phone"/>
                 <field name="state"/>
             </tree>
@@ -80,6 +82,8 @@
                             <field name="date_of_birth"/>
                             <field name="age" readonly="1"/>
                             <field name="gender"/>
+                            <field name="classroom_id"
+                                   domain="[('active', '=', True)]"/>
                         </group>
 
                         <group string="Contact Information">
@@ -89,8 +93,31 @@
                     </group>
 
                     <!-- Record Information -->
-                    <group>
+                                       <!-- Record Information -->
+                    <group string="Record Information">
                         <field name="active"/>
+                    </group>
+
+                    <!-- Attendance Statistics -->
+                    <group string="Attendance Statistics">
+                        <group>
+                            <field name="total_attendance_records"
+                                   readonly="1"/>
+                            <field name="present_days"
+                                   readonly="1"/>
+                            <field name="late_days"
+                                   readonly="1"/>
+                        </group>
+
+                        <group>
+                            <field name="absent_days"
+                                   readonly="1"/>
+                            <field name="excused_days"
+                                   readonly="1"/>
+                            <field name="attendance_rate"
+                                   widget="percentage"
+                                   readonly="1"/>
+                        </group>
                     </group>
 
                 </sheet>

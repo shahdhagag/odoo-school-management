@@ -7,7 +7,46 @@ class SchoolStudent(models.Model):
     _description = 'School Student'
     _rec_name = 'name'
     _order = 'student_number'
+    classroom_id = fields.Many2one(
+        comodel_name='school.classroom',
+        string='Classroom',
+        ondelete='restrict'
+    )
+    attendance_ids = fields.One2many(
+        comodel_name='school.attendance',
+        inverse_name='student_id',
+        string='Attendance Records',
+    )
+    total_attendance_records = fields.Integer(
+        string='Total Attendance Records',
+        compute='_compute_attendance_statistics',
+    )
 
+    present_days = fields.Integer(
+        string='Present Days',
+        compute='_compute_attendance_statistics',
+    )
+
+    late_days = fields.Integer(
+        string='Late Days',
+        compute='_compute_attendance_statistics',
+    )
+
+    absent_days = fields.Integer(
+        string='Absent Days',
+        compute='_compute_attendance_statistics',
+    )
+
+    excused_days = fields.Integer(
+        string='Excused Days',
+        compute='_compute_attendance_statistics',
+    )
+
+    attendance_rate = fields.Float(
+        string='Attendance Rate (%)',
+        compute='_compute_attendance_statistics',
+        digits=(5, 2),
+    )
     # Student Information
     name = fields.Char(
         string='Full Name',
@@ -66,6 +105,43 @@ class SchoolStudent(models.Model):
         copy=False
     )
 
+    _sql_constraints = [
+        (
+            'student_number_unique',
+            'UNIQUE(student_number)',
+            'Student number must be unique.'
+        ),
+    ]
+
+    @api.depends('attendance_ids.status')
+    def _compute_attendance_statistics(self):
+        for student in self:
+            records = student.attendance_ids
+
+            total = len(records)
+            present = len(records.filtered(
+                lambda record: record.status == 'present'
+            ))
+            late = len(records.filtered(
+                lambda record: record.status == 'late'
+            ))
+            absent = len(records.filtered(
+                lambda record: record.status == 'absent'
+            ))
+            excused = len(records.filtered(
+                lambda record: record.status == 'excused'
+            ))
+
+            student.total_attendance_records = total
+            student.present_days = present
+            student.late_days = late
+            student.absent_days = absent
+            student.excused_days = excused
+
+            student.attendance_rate = (
+                (present + late) / total
+                if total else 0.0
+            )
     # Calculate Student Age
     @api.depends('date_of_birth')
     def _compute_age(self):
@@ -98,6 +174,21 @@ class SchoolStudent(models.Model):
             ):
                 raise ValidationError(
                     "Date of Birth cannot be in the future."
+                )
+
+    @api.constrains('classroom_id', 'active')
+    def _check_classroom_capacity(self):
+        for student in self:
+            if not student.classroom_id or not student.active:
+                continue
+
+            enrolled_count = self.search_count([
+                ('classroom_id', '=', student.classroom_id.id),
+                ('active', '=', True),
+            ])
+            if enrolled_count > student.classroom_id.capacity:
+                raise ValidationError(
+                    "The classroom capacity has been exceeded."
                 )
 
     # Generate Student Number Automatically

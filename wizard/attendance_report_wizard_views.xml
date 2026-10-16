@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Attendance Report Wizard Form -->
+    <record id="view_school_attendance_report_wizard_form"
+            model="ir.ui.view">
+        <field name="name">school.attendance.report.wizard.form</field>
+        <field name="model">school.attendance.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Attendance Report">
+
+                <group string="Report Filters">
+                    <field name="classroom_id"/>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                </group>
+
+                <group string="Attendance Summary">
+                    <group>
+                        <field name="total_records" readonly="1"/>
+                        <field name="present_count" readonly="1"/>
+                        <field name="late_count" readonly="1"/>
+                    </group>
+
+                    <group>
+                        <field name="absent_count" readonly="1"/>
+                        <field name="excused_count" readonly="1"/>
+                        <field name="attendance_rate"
+                               widget="percentage"
+                               readonly="1"/>
+                    </group>
+                </group>
+
+                <footer>
+                    <button name="action_generate_report"
+                            string="Generate Report"
+                            type="object"
+                            class="oe_highlight"/>
+
+                    <button string="Close"
+                            special="cancel"/>
+                </footer>
+
+            </form>
+        </field>
+    </record>
+
+    <!-- Attendance Report Wizard Action -->
+    <record id="action_school_attendance_report_wizard"
+            model="ir.actions.act_window">
+        <field name="name">Attendance Report</field>
+        <field name="res_model">school.attendance.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="view_id"
+               ref="view_school_attendance_report_wizard_form"/>
+        <field name="target">new</field>
+    </record>
+
+    <!-- Attendance Report Menu -->
+    <menuitem id="menu_school_attendance_report"
+              name="Attendance Report"
+              parent="menu_school_root"
+              action="action_school_attendance_report_wizard"
+              sequence="52"/>
+
+</odoo>
